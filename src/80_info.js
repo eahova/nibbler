@@ -394,6 +394,8 @@ function NewInfoHandler() {
 			statusbox.innerHTML = `<span class="red">draw_statusbox - !node || node.destroyed</span>`;
 
 		} else {
+			
+			let limit_met = (typeof config.search_nodes === "number" && node.table.nodes >= config.search_nodes);
 
 			let status_string = "";
 
@@ -410,12 +412,14 @@ function NewInfoHandler() {
 			} else if (config.behaviour === "auto_analysis") {
 				status_string += `<span class="green">Auto-eval! </span>`;
 			} else if (config.behaviour === "analysis_free") {
-				status_string += `<span id="haltbutton_clicker" class="green">RUNNING (halt?) </span>`;
+				if (!limit_met) {				
+					status_string += `<span id="haltbutton_clicker" class="green">RUNNING (halt?) </span>`;
+				}
 			}
 
 			status_string += `<span class="gray">Nodes: ${NString(node.table.nodes)}, N/s: ${NString(node.table.nps)}, Time: ${DurationString(node.table.time)}</span>`;
-
-			if (typeof config.search_nodes === "number" && node.table.nodes >= config.search_nodes) {
+			
+			if (limit_met) {
 				status_string += ` <span class="blue">(limit met)</span>`;
 			}
 
